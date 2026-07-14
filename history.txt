@@ -1,0 +1,65 @@
+========================================
+Operation : Rotate PDF
+Date : 2026-07-14 15:39:16.103086
+
+Files:
+C:/Users/hanii/Downloads/Cross_Cultural_Psychology_Chapters_2-3_Detailed_Notes.pdf
+
+==================================================
+Operation : Protect PDF
+Date : 14-07-2026 05:28 PM
+
+Files:
+1.pdf
+
+==================================================
+Operation : Extract Pages
+Date : 14-07-2026 05:40 PM
+
+Files:
+Cross_Cultural_Psychology_Chapters_2-3_Detailed_Notes.pdf
+
+==================================================
+Operation : Extract Pages
+Date : 14-07-2026 05:41 PM
+
+Files:
+Cross_Cultural_Psychology_Chapters_2-3_Detailed_Notes.pdf
+
+==================================================
+Operation : Extract Pages
+Date : 14-07-2026 06:29 PM
+
+Files:
+Basics-of-Python-Programming-20AES0509_compressed (1).pdf
+
+==================================================
+Operation : Extract Pages
+Date : 14-07-2026 06:30 PM
+
+Files:
+Basics-of-Python-Programming-20AES0509_compressed (1).pdf
+
+==================================================
+Operation : Extract Pages
+Date : 14-07-2026 06:32 PM
+
+Files:
+AKFP_Agentic-AI.pdf
+
+==================================================
+Operation : Merge PDF
+Date : 14-07-2026 06:33 PM
+
+Files:
+1st pdf.pdf
+AKFP_Agentic-AI.pdf
+SirFile.pdf
+
+==================================================
+Operation : Protect PDF
+Date : 14-07-2026 06:39 PM
+
+Files:
+1st pdf.pdf
+
