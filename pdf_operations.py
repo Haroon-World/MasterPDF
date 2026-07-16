@@ -58,56 +58,93 @@ def MergePDF(files):
 # ==========================================
 # Split PDF
 # ==========================================
+import tkinter as tk
+
 def SplitPDF(files):
 
     if not files:
         messagebox.showwarning(
             "PDFMaster",
-            "Please select a PDF first."
+            "Please select one PDF first."
         )
         return
 
-    # Split works on one PDF only
     pdf_file = files[0]
 
     try:
         reader = PdfReader(pdf_file)
+        total_pages = len(reader.pages)
 
-        # Ask user where to save split pages
-        save_folder = filedialog.askdirectory(
-            title="Select Folder to Save Split PDFs"
+        root_win = tk._default_root
+
+        start_page = simpledialog.askinteger(
+            "Split PDF",
+            f"Enter Start Page (1-{total_pages})",
+            parent=root_win
         )
 
-        if not save_folder:
+        if start_page is None:
             return
 
-        # Create one PDF for each page
-        for page_number, page in enumerate(reader.pages, start=1):
+        end_page = simpledialog.askinteger(
+            "Split PDF",
+            f"Enter End Page ({start_page}-{total_pages})",
+            parent=root_win
+        )
 
-            writer = PdfWriter()
-            writer.add_page(page)
+        if end_page is None:
+            return
 
-            output_path = (
-                f"{save_folder}/Page_{page_number}.pdf"
+        if (
+            start_page < 1 or
+            end_page > total_pages or
+            start_page > end_page
+        ):
+            messagebox.showwarning(
+                "PDFMaster",
+                "Invalid page range.",
+                parent=root_win
             )
+            return
 
-            with open(output_path, "wb") as output_file:
-                writer.write(output_file)
+        writer = PdfWriter()
 
-            writer.close()
+        for page in range(start_page - 1, end_page):
+            writer.add_page(reader.pages[page])
 
-        SaveHistory("Split PDF", [pdf_file])
+        save_path = filedialog.asksaveasfilename(
+            title="Save Split PDF",
+            defaultextension=".pdf",
+            filetypes=[("PDF Files", "*.pdf")],
+            parent=root_win
+        )
+
+        if not save_path:
+            return
+
+        with open(save_path, "wb") as output_file:
+            writer.write(output_file)
+
+        writer.close()
+
+        SaveHistory(
+            f"Split PDF ({start_page}-{end_page})",
+            [pdf_file]
+        )
 
         messagebox.showinfo(
             "Success",
-            f"Successfully created {len(reader.pages)} PDF files."
+            "PDF split successfully!",
+            parent=root_win
         )
 
     except Exception as e:
         messagebox.showerror(
             "Error",
-            str(e)
+            str(e),
+            parent=tk._default_root
         )
+
 # ==========================================
 # Protect PDF
 # ==========================================
@@ -211,6 +248,12 @@ def ExtractPages(files):
                 if 1 <= page <= total_pages:
                     writer.add_page(reader.pages[page - 1])
 
+            if len(writer.pages) == 0:
+                messagebox.showwarning(
+                    "PDFMaster",
+                    "No valid pages selected."
+                )
+                return
 
         save_path = filedialog.asksaveasfilename(
             title="Save Extracted PDF",
@@ -220,7 +263,6 @@ def ExtractPages(files):
 
         if not save_path:
             return
-
         with open(save_path, "wb") as output_file:
             writer.write(output_file)
 
@@ -258,7 +300,7 @@ def InfoPDF(files):
 
         messagebox.showinfo(
             "PDF Information",
-            f"File: {files[0]}\n\nTotal Pages: {pages}"
+            f"File: {basename(files[0])}\n\nTotal Pages: {pages}"
         )
 
     except Exception as e:
@@ -270,37 +312,46 @@ def InfoPDF(files):
 from os.path import basename
 
 def SaveHistory(operation, files):
+    try:
+        with open("history.txt", "a", encoding="utf-8") as history:
 
-    with open("history.txt", "a", encoding="utf-8") as history:
+            history.write("=" * 50 + "\n")
+            history.write(f"Operation : {operation}\n")
+            history.write(
+                f"Date : {datetime.now().strftime('%d-%m-%Y %I:%M %p')}\n\n"
+            )
 
-        history.write("=" * 50 + "\n")
-        history.write(f"Operation : {operation}\n")
-        history.write(
-            f"Date : {datetime.now().strftime('%d-%m-%Y %I:%M %p')}\n\n"
-        )
+            history.write("Files:\n")
 
-        history.write("Files:\n")
+            for file in files:
+                history.write(f"{basename(file)}\n")
 
-        for file in files:
-            history.write(f"{basename(file)}\n")
-
-        history.write("\n")
+            history.write("\n")
+    except Exception:
+        pass
+        
+# History
 def ShowHistory():
-
     try:
         with open("history.txt", "r", encoding="utf-8") as history:
             data = history.read()
 
         if not data.strip():
             data = "No history available."
+            messagebox.showinfo("History", data, parent=tk._default_root)
+            return
 
-        messagebox.showinfo(
-            "History",
-            data
+        # Pop-up 
+        choice = messagebox.askyesno(
+            "History Log",
+            f"{data}\n\nDo you want to clear all history?",
+            parent=tk._default_root
         )
+#History Clearance
+        if choice:
+            with open("history.txt", "w", encoding="utf-8") as history:
+                history.write("")
+            messagebox.showinfo("Success", "History cleared!", parent=tk._default_root)
 
     except FileNotFoundError:
-        messagebox.showinfo(
-            "History",
-            "No history available."
-        )
+        messagebox.showinfo("History", "No history available.", parent=tk._default_root)
