@@ -6,14 +6,13 @@ A Python desktop application for performing PDF operations.
 - Merge PDF
 - Split PDF
 - Protect PDF
-- Unlock PDF
-- Compress PDF
 - Extract Pages
 
 ## Technologies
 - Python
 - CustomTkinter
 - pypdf
+- PyMuPDF
 
 ## Installation
 
@@ -26,5 +25,5 @@ python main.py
 
 ## Author
 
-Muhammad Haroon Siddique
+Muhammad Haroon Siddique (UoS)
 Whatsapp# 03187538771
